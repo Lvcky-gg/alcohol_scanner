@@ -1,0 +1,27 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+# Runtime libs needed by Paddle/Python image stack.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libgl1 \
+    libglx-mesa0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt requirements-ocr.txt ./
+RUN pip install --upgrade pip && pip install -r requirements-ocr.txt
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]

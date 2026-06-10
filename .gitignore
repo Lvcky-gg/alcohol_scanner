@@ -1,0 +1,101 @@
+# -----------------------------
+# Secrets / local env
+# -----------------------------
+.env
+!.env.example
+*.pem
+*.key
+*.crt
+
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+.Python
+
+# Virtual environments
+.venv/
+.venv-ocr/
+venv/
+env/
+ENV/
+
+# Python tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.hypothesis/
+.tox/
+.nox/
+
+# Coverage / test artifacts
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+nosetests.xml
+junit.xml
+
+# Build / packaging
+build/
+dist/
+site/
+.eggs/
+*.egg-info/
+pip-wheel-metadata/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# -----------------------------
+# Frontend (Vue/Vite/TS)
+# -----------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/coverage/
+frontend/*.tsbuildinfo
+
+# JS package manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# -----------------------------
+# Logs / runtime files
+# -----------------------------
+logs/
+*.log
+*.out
+*.err
+*.pid
+*.pid.lock
+
+# -----------------------------
+# Editors / OS
+# -----------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Local app data / temp
+# -----------------------------
+tmp/
+temp/
+.cache/
+uploads/
