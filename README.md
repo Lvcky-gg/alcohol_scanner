@@ -44,7 +44,7 @@ The API base URL is baked into the frontend bundle at build time via a Vite env 
 
 ### Local Hosting
 I am hosting everything on my own silicon; inlcuding the models, API, and frontend. I have functional infrastucture for something like this and would prefer to avoid the use of tokens and cloud hosting fees when not necessary
-This does require workarounds on ports given that 80 and 443 are blocked by my ISP.
+This does require workarounds on ports given that 80 and 443 are blocked by my ISP. Please note that this means i am cold starting the models periodically in order to maintain uptime with a systemD timer. Users may experience some longer upload times periodically
 I also think its worth exploring this kind of thing for actual products with lower ammounts of users. Although I have an old GPU that makes things slow, you can speed things up on higher end equipment and edge deployment strategies
 
 
