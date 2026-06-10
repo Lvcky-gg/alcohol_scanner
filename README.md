@@ -14,6 +14,7 @@ It includes OCR + rule-based verification for alcohol label fields:
 - Python 3.10+ < 3.13
 - Docker + Docker Compose
 - Linux system libs for OCR (if missing): `libglib2.0-0`, `libsm6`, `libxext6`, `libxrender1`
+- Locally running ollama instance
 
 Compatibility note:
 
