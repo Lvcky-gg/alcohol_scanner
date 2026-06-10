@@ -102,7 +102,9 @@ async function onVerify(): Promise<void> {
               class="rounded-xl border border-[var(--tac-border)] bg-[var(--tac-panel-soft)] p-4 tactical-row">
               <div class="flex items-start justify-between gap-2">
                 <p class="text-xs tracking-[0.28em] text-[var(--tac-fog)]">{{ row.label }}</p>
-                <Tag :severity="severityFromStatus(row.status)" :value="row.status.toUpperCase()" />
+                <Tag
+                  :severity="severityFromStatus(row.value !== 'Detected by Ollama (unreadable by OCR)' ? row.status : 'review')"
+                  :value="row.value !== 'Detected by Ollama (unreadable by OCR)' ? row.status.toUpperCase() : 'REVIEW'" />
               </div>
               <Divider class="my-2" />
               <p class="font-['Share_Tech_Mono'] text-sm text-[var(--tac-ice)] md:text-base">{{ row.value || 'null' }}
