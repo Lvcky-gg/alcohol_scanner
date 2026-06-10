@@ -85,7 +85,7 @@ export const useVerificationStore = defineStore('verification', () => {
       const ruleChecks: Array<{ field: string; status: string; detected: string | null }> =
         payload?.ruleVerification?.checks ?? []
       const govCheck = ruleChecks.find((c) => c.field === 'government_warning')
-      const govDetected = govCheck?.detected ?? null
+      const govDetected = govCheck?.detected || null
 
       const ollamaParsed = payload?.ollamaVerification?.parsed ?? {}
       const ollamaPresent: boolean | null = ollamaParsed?.governmentWarningPresent ?? null
