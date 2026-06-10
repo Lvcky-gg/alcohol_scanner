@@ -97,6 +97,7 @@ export const useVerificationStore = defineStore('verification', () => {
       if (!govStatus) {
         if (ollamaValid === true) govStatus = 'pass'
         else if (ollamaPresent === true && ollamaValid === false) govStatus = 'review'
+        else if (ollamaPresent === true) govStatus = 'review'
         else if (ollamaPresent === false) govStatus = 'fail'
         else govStatus = null
       }
