@@ -8,6 +8,7 @@ type CanonicalFields = {
   netContents: string | null
   countryOfOrigin: string | null
   producer: string | null
+  governmentWarning: string | null
 }
 
 type FieldKey = keyof CanonicalFields
@@ -33,6 +34,7 @@ const FIELD_META: Record<FieldKey, string> = {
   netContents: 'Net Contents',
   countryOfOrigin: 'Country of Origin',
   producer: 'Producer',
+  governmentWarning: 'Government Warning',
 }
 
 function toStatus(confidence: number | null, value: string | null): FieldStatus {
@@ -80,6 +82,12 @@ export const useVerificationStore = defineStore('verification', () => {
       const canonical = payload?.canonicalFields ?? payload?.finalFields ?? {}
       const confidence = payload?.ollamaVerification?.parsed?.confidence ?? {}
 
+      const ruleChecks: Array<{ field: string; status: string; detected: string | null }> =
+        payload?.ruleVerification?.checks ?? []
+      const govCheck = ruleChecks.find((c) => c.field === 'government_warning')
+      const govStatus = govCheck?.status ?? null
+      const govDetected = govCheck?.detected ?? null
+
       const fields: CanonicalFields = {
         brandName: canonical.brandName ?? null,
         classType: canonical.classType ?? null,
@@ -87,9 +95,19 @@ export const useVerificationStore = defineStore('verification', () => {
         netContents: canonical.netContents ?? null,
         countryOfOrigin: canonical.countryOfOrigin ?? null,
         producer: canonical.producer ?? null,
+        governmentWarning: govDetected,
       }
 
       const rows: FieldResult[] = (Object.keys(FIELD_META) as FieldKey[]).map((key) => {
+        if (key === 'governmentWarning') {
+          const ruleFieldStatus = (govStatus as FieldStatus | null) ?? toStatus(null, govDetected)
+          return {
+            label: FIELD_META[key],
+            value: govDetected,
+            confidence: null,
+            status: ruleFieldStatus,
+          }
+        }
         const value = fields[key]
         const scoreRaw = confidence[key]
         const score = typeof scoreRaw === 'number' ? scoreRaw : null
