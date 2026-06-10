@@ -3,7 +3,6 @@ import os
 import tempfile
 
 from flask import Blueprint, jsonify, request
-import pg8000.dbapi as pgdb
 
 from label_verification import STANDARD_GOVERNMENT_WARNING, extract_structured_fields, verify_label
 from api.config import Settings
