@@ -85,8 +85,25 @@ export const useVerificationStore = defineStore('verification', () => {
       const ruleChecks: Array<{ field: string; status: string; detected: string | null }> =
         payload?.ruleVerification?.checks ?? []
       const govCheck = ruleChecks.find((c) => c.field === 'government_warning')
-      const govStatus = govCheck?.status ?? null
       const govDetected = govCheck?.detected ?? null
+
+      const ollamaParsed = payload?.ollamaVerification?.parsed ?? {}
+      const ollamaPresent: boolean | null = ollamaParsed?.governmentWarningPresent ?? null
+      const ollamaValid: boolean | null = ollamaParsed?.governmentWarningValid ?? null
+      const ollamaGovConfidence: number | null = ollamaParsed?.confidence?.governmentWarning ?? null
+
+      // Determine row status: rule check takes precedence; fall back to Ollama inference
+      let govStatus: string | null = govCheck?.status ?? null
+      if (!govStatus) {
+        if (ollamaValid === true) govStatus = 'pass'
+        else if (ollamaPresent === true && ollamaValid === false) govStatus = 'fail'
+        else if (ollamaPresent === false) govStatus = 'fail'
+        else govStatus = null
+      }
+      // Surface Ollama evidence in the value when rule check found nothing
+      const govDisplayValue =
+        govDetected ??
+        (ollamaPresent === true ? 'Detected by Ollama (unreadable by OCR)' : null)
 
       const fields: CanonicalFields = {
         brandName: canonical.brandName ?? null,
@@ -95,16 +112,16 @@ export const useVerificationStore = defineStore('verification', () => {
         netContents: canonical.netContents ?? null,
         countryOfOrigin: canonical.countryOfOrigin ?? null,
         producer: canonical.producer ?? null,
-        governmentWarning: govDetected,
+        governmentWarning: govDisplayValue,
       }
 
       const rows: FieldResult[] = (Object.keys(FIELD_META) as FieldKey[]).map((key) => {
         if (key === 'governmentWarning') {
-          const ruleFieldStatus = (govStatus as FieldStatus | null) ?? toStatus(null, govDetected)
+          const ruleFieldStatus = (govStatus as FieldStatus | null) ?? toStatus(null, govDisplayValue)
           return {
             label: FIELD_META[key],
-            value: govDetected,
-            confidence: null,
+            value: govDisplayValue,
+            confidence: ollamaGovConfidence,
             status: ruleFieldStatus,
           }
         }

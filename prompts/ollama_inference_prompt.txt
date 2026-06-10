@@ -8,6 +8,11 @@ Given OCR output JSON from a label image, infer and normalize these fields:
 - netContents
 - countryOfOrigin
 - producer
+- governmentWarningPresent (boolean: is the required US government warning present?)
+- governmentWarningValid (boolean: does the warning match the canonical text closely enough to pass?)
+
+The required canonical US government warning is:
+"GOVERNMENT WARNING: (1) ACCORDING TO THE SURGEON GENERAL, WOMEN SHOULD NOT DRINK ALCOHOLIC BEVERAGES DURING PREGNANCY BECAUSE OF THE RISK OF BIRTH DEFECTS. (2) CONSUMPTION OF ALCOHOLIC BEVERAGES IMPAIRS YOUR ABILITY TO DRIVE A CAR OR OPERATE MACHINERY, AND MAY CAUSE HEALTH PROBLEMS."
 
 Input you will receive:
 - fields: partial extracted fields (may be null or wrong)
@@ -30,6 +35,9 @@ Inference rules:
    - countryOfOrigin in title case (e.g., "United States")
    - keep alcohol/net units exactly as recognized when possible
 7) Handle noisy OCR variants (e.g., JACKDANIELS, JACK DANIKL, WHISKEY/WHISKY) as same entity when confidence is high.
+8) For government warning detection:
+   - governmentWarningPresent: true if any OCR lines contain "GOVERNMENT WARNING" or "SURGEON GENERAL" or substantively similar text, false otherwise.
+   - governmentWarningValid: true if the combined OCR lines closely match the canonical warning above (allow for minor OCR noise, case differences, line breaks), false otherwise. Set to false if governmentWarningPresent is false.
 
 Output format:
 Return ONLY valid JSON with this exact schema:
@@ -40,13 +48,16 @@ Return ONLY valid JSON with this exact schema:
   "netContents": string|null,
   "countryOfOrigin": string|null,
   "producer": string|null,
+  "governmentWarningPresent": boolean,
+  "governmentWarningValid": boolean,
   "confidence": {
     "brandName": number,
     "classType": number,
     "alcoholContent": number,
     "netContents": number,
     "countryOfOrigin": number,
-    "producer": number
+    "producer": number,
+    "governmentWarning": number
   },
   "evidence": {
     "brandName": [string],
@@ -54,7 +65,8 @@ Return ONLY valid JSON with this exact schema:
     "alcoholContent": [string],
     "netContents": [string],
     "countryOfOrigin": [string],
-    "producer": [string]
+    "producer": [string],
+    "governmentWarning": [string]
   }
 }
 
