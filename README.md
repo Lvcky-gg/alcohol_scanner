@@ -62,6 +62,10 @@ if you are willing to budget for it and you don't have infrastructure in place o
 
 ### A Better Solution Than Mine
 Would use better hardware (I am on an arch linux box with relatively low specs so I can't host the fastest models) and/or would hit anthropic/openai/etc apis rather than local models. I would still generally approach things in the same way. My current solution is very good for cost effectiveness however.
+More endpoints can be added to handle more types of AI providers if needed
+
+### Batching
+We had batching, but it was turned off on the frontend due to hardware constraints. The API still supports it
 
 ## 1) Prerequisites
 
